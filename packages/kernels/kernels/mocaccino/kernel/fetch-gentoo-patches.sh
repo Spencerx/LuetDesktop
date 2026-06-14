@@ -21,7 +21,7 @@ if [ -f ".fetched-${MAJOR_MINOR}" ]; then
     echo "Patches for ${MAJOR_MINOR} already fetched, skipping download..."
 else
     # Clean old patches
-    rm -f *.patch .fetched-*
+    ls *.patch | grep -vE "9999-bore.patch|0001-net-ipv4-route-reset-fi-broadcast.patch" | xargs rm -f; rm -f .fetched-*
 
     # Clone the specific kernel version branch from Gentoo's linux-patches repo
     TEMP_DIR=$(mktemp -d)
@@ -64,6 +64,7 @@ patch_count=0
 failed_count=0
 
 for patch in *.patch; do
+    [ "$patch" == "9999-bore.patch" ] && continue
     [ -f "$patch" ] || continue
     
     echo "Applying: $patch"
